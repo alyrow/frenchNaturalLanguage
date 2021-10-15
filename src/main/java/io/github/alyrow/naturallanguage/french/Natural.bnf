@@ -1,0 +1,189 @@
+{
+  generateTokens=true
+  generatePsi=true
+  parserClass="io.github.alyrow.naturallanguage.french.parser.NaturalParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Natural"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.github.alyrow.naturallanguage.french.psi"
+  psiImplPackage="io.github.alyrow.naturallanguage.french.psi.impl"
+
+  elementTypeHolderClass="io.github.alyrow.naturallanguage.french.psi.NaturalTypes"
+  elementTypeClass="io.github.alyrow.naturallanguage.french.psi.NaturalElementType"
+  tokenTypeClass="io.github.alyrow.naturallanguage.french.psi.NaturalTokenType"
+
+  /*extends(".*expr_real")=expr_real
+  extends(".*expr_int")=expr_real
+  extends(".*expr_str")=expr_real
+  extends(".*expr_bool")=expr_real*/
+}
+
+naturalFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? AFFECTATION VALUE?) | KEY | NUMBER_INT | NUMBER_REAL | CHARACTER | STRING | BOOLEAN | BOOL_AND | BOOL_OR
+                                     | BOOL_NO | LPAREN | RPAREN | TYPES | (KEY AFFECTATION (KEY | VALUE)) | KEYWORD | COMMA | SEMICOLON | operation_for_lazy | OTHER_OPERATORS
+
+/*
+operation_rules ::= add|minus|mul|real_div|int_div|int_mod|b_or|b_and|b_no|ADDITION|SOUSTRACTION|MULTIPLICATION|REAL_DIVISION|INT_DIVISION|INT_MODULO|BOOL_OR|BOOL_AND
+
+add ::= ((KEY|NUMBER_INT) SEPARATOR? ADDITION SEPARATOR? (KEY|NUMBER_INT))|((KEY|NUMBER_REAL) SEPARATOR? ADDITION SEPARATOR? (KEY|NUMBER_REAL))|((NUMBER_INT|NUMBER_REAL) SEPARATOR? ADDITION SEPARATOR? (NUMBER_INT|NUMBER_REAL))|((KEY|CHARACTER) SEPARATOR? ADDITION SEPARATOR? (KEY|CHARACTER))|((KEY|STRING) SEPARATOR? ADDITION SEPARATOR? (KEY|STRING))|((CHARACTER|STRING) SEPARATOR? ADDITION SEPARATOR? (CHARACTER|STRING))
+minus ::= ((KEY|NUMBER_INT) SEPARATOR? SOUSTRACTION SEPARATOR? (KEY|NUMBER_INT))|((KEY|NUMBER_REAL) SEPARATOR? SOUSTRACTION SEPARATOR? (KEY|NUMBER_REAL))|((NUMBER_INT|NUMBER_REAL) SEPARATOR? SOUSTRACTION SEPARATOR? (NUMBER_INT|NUMBER_REAL))
+mul ::= ((KEY|NUMBER_INT) SEPARATOR? MULTIPLICATION SEPARATOR? (KEY|NUMBER_INT))|((KEY|NUMBER_REAL) SEPARATOR? MULTIPLICATION SEPARATOR? (KEY|NUMBER_REAL))|((NUMBER_INT|NUMBER_REAL) SEPARATOR? MULTIPLICATION SEPARATOR? (NUMBER_INT|NUMBER_REAL))
+real_div ::= ((KEY|NUMBER_REAL) SEPARATOR? REAL_DIVISION SEPARATOR? (KEY|NUMBER_REAL))|((NUMBER_INT|NUMBER_REAL) SEPARATOR? REAL_DIVISION SEPARATOR? (NUMBER_INT|NUMBER_REAL))
+int_div ::= ((KEY|NUMBER_INT) SEPARATOR? INT_DIVISION SEPARATOR? (KEY|NUMBER_INT))
+int_mod ::= ((KEY|NUMBER_INT) SEPARATOR? INT_MODULO SEPARATOR? (KEY|NUMBER_INT))
+b_or ::= ((KEY|BOOLEAN) SEPARATOR BOOL_OR SEPARATOR (KEY|BOOLEAN))
+b_and ::= ((KEY|BOOLEAN) SEPARATOR BOOL_AND SEPARATOR (KEY|BOOLEAN))
+b_no ::= (BOOL_NO SEPARATOR? LPAREN SEPARATOR? (KEY|BOOLEAN) SEPARATOR? RPAREN)*/
+
+operation_for_lazy ::= SOUSTRACTION | ADDITION | REAL_DIVISION | MULTIPLICATION | LPAREN | RPAREN | BOOL_NO | BOOL_OR | BOOL_AND | NUMBER_INT |NUMBER_REAL
+                       INT_MODULO | INT_DIVISION | STRING | CHARACTER | BOOLEAN
+
+
+/*
+// the root expression rule
+expr_real ::= assign_expr_real
+  | add_group_real
+  | mul_group_real
+  | bool_group_real
+  | unary_group_real
+  | exp_expr_real
+  | qualification_expr_real
+  | primary_group_real
+
+// private rules to define operators with the same priority
+private unary_group_real ::= unary_plus_expr_real | unary_min_expr_real
+private mul_group_real ::= mul_expr_real | div_expr_real | div_expr_int | mod_expr_int
+private add_group_real ::= plus_expr_real | minus_expr_real
+private bool_group_real ::= no_expr_real | and_expr_real | or_expr_real
+private primary_group_real ::= simple_ref_expr_real | literal_expr_real | literal_expr_int | literal_expr_str | literal_expr_bool | paren_expr_real
+
+// public rules for each expression
+assign_expr_real ::= expr_real '=' expr_real { rightAssociative=true }
+unary_min_expr_real ::= SOUSTRACTION expr_real
+unary_plus_expr_real ::= ADDITION expr_real
+div_expr_real ::= expr_real REAL_DIVISION expr_real
+mul_expr_real ::= expr_real MULTIPLICATION expr_real
+minus_expr_real ::= expr_real SOUSTRACTION expr_real
+plus_expr_real ::= expr_real ADDITION expr_real
+exp_expr_real ::= expr_real ('^' expr_real) + // N-ary variant, the "(<op> expr ) +" syntax is mandatory.
+paren_expr_real ::= LPAREN expr_real RPAREN
+no_expr_real ::= BOOL_NO LPAREN expr_real RPAREN
+and_expr_real ::= expr_real BOOL_AND expr_real
+or_expr_real ::= expr_real BOOL_OR expr_real
+
+// introduce fake rule with @Nullable qualifier getter and
+// let qualified and simple references have its elementType
+fake ref_expr_real ::= expr_real? '.' identifier_real
+simple_ref_expr_real ::= identifier_real {extends=ref_expr_real elementType=ref_expr_real}
+qualification_expr_real ::= expr_real '.' identifier_real {extends=ref_expr_real elementType=ref_expr_real}
+
+literal_expr_real ::= NUMBER_REAL
+identifier_real ::= KEY
+*/
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*// the root expression rule
+expr_int ::= assign_expr_int
+  | add_group_int
+  | mul_group_int
+  | unary_group_int
+  | exp_expr_int
+  | qualification_expr_int
+  | primary_group_int
+
+// private rules to define operators with the same priority
+private unary_group_int ::= unary_plus_expr_int | unary_min_expr_int
+private mul_group_int ::= mul_expr_int | div_expr_int | mod_expr_int
+private add_group_int ::= plus_expr_int | minus_expr_int
+private primary_group_int ::= simple_ref_expr_int | literal_expr_int | paren_expr_int
+
+// public rules for each expression
+assign_expr_int ::= expr_int '=' expr_int { rightAssociative=true }
+unary_min_expr_int ::= SOUSTRACTION expr_int
+unary_plus_expr_int ::= ADDITION expr_int*/
+//div_expr_int ::= expr_real INT_DIVISION expr_real
+//mod_expr_int ::= expr_real INT_MODULO expr_real
+/*
+mul_expr_int ::= expr_int MULTIPLICATION expr_int
+minus_expr_int ::= expr_int SOUSTRACTION expr_int
+plus_expr_int ::= expr_int ADDITION expr_int
+exp_expr_int ::= expr_int ('^' expr_int) + // N-ary variant, the "(<op> expr ) +" syntax is mandatory.
+paren_expr_int ::= LPAREN expr_int RPAREN
+
+// introduce fake rule with @Nullable qualifier getter and
+// let qualified and simple references have its elementType
+fake ref_expr_int ::= expr_int? '.' identifier_int
+simple_ref_expr_int ::= identifier_int {extends=ref_expr_int elementType=ref_expr_int}
+qualification_expr_int ::= expr_int '.' identifier_int {extends=ref_expr_int elementType=ref_expr_int}
+*/
+//literal_expr_int ::= NUMBER_INT
+//identifier_int ::= KEY
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+//// the root expression rule
+//expr_str ::= assign_expr_str
+//  | add_group_str
+//  | unary_group_str
+//  | qualification_expr_str
+//  | primary_group_str
+//
+//// private rules to define operators with the same priority
+//private unary_group_str ::= unary_plus_expr_str
+//private add_group_str ::= plus_expr_str
+//private primary_group_str ::= simple_ref_expr_str | literal_expr_str | paren_expr_str
+//
+//// public rules for each expression
+//assign_expr_str ::= expr_str '=' expr_str { rightAssociative=true }
+//unary_plus_expr_str ::= ADDITION expr_str
+//plus_expr_str ::= expr_str ADDITION expr_str
+//paren_expr_str ::= LPAREN expr_str RPAREN
+//
+//// introduce fake rule with @Nullable qualifier getter and
+//// let qualified and simple references have its elementType
+//fake ref_expr_str ::= expr_str? '.' identifier_str
+//simple_ref_expr_str ::= identifier_str {extends=ref_expr_str elementType=ref_expr_str}
+//qualification_expr_str ::= expr_str '.' identifier_str {extends=ref_expr_str elementType=ref_expr_str}
+
+//literal_expr_str ::= STRING | CHARACTER
+//identifier_str ::= KEY
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*// the root expression rule
+expr_bool ::= assign_expr_bool
+  | and_expr_bool
+  | or_expr_bool
+  | no_expr_bool
+  | qualification_expr_bool
+  | primary_group_bool
+
+// private rules to define operators with the same priority
+
+private primary_group_bool ::= simple_ref_expr_bool | literal_expr_bool | paren_expr_bool
+
+// public rules for each expression
+assign_expr_bool ::= expr_bool '=' expr_bool { rightAssociative=true }*/
+//no_expr_bool ::= BOOL_NO LPAREN expr_bool RPAREN
+//and_expr_bool ::= expr_bool BOOL_AND expr_bool
+//or_expr_bool ::= expr_bool BOOL_OR expr_bool
+/*
+paren_expr_bool ::= LPAREN expr_bool RPAREN
+
+// introduce fake rule with @Nullable qualifier getter and
+// let qualified and simple references have its elementType
+fake ref_expr_bool ::= expr_bool? '.' identifier_bool
+simple_ref_expr_bool ::= identifier_bool {extends=ref_expr_bool elementType=ref_expr_bool}
+qualification_expr_bool ::= expr_bool '.' identifier_bool {extends=ref_expr_bool elementType=ref_expr_bool}
+*/
+
+//literal_expr_bool ::= BOOLEAN
+//identifier_bool ::= KEY

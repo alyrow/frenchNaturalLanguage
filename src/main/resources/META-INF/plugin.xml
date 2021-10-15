@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>io.github.alyrow.naturallanguage.french</id>
+    <name>French Natural Language</name>
+    <vendor email="58048578+alyrow@users.noreply.github.com" url="https://github.com/alyrow">alyrow</vendor>
+
+    <description>
+        Support french natural language for JetBrains product
+    </description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Natural language File" implementationClass="io.github.alyrow.naturallanguage.french.NaturalFileType"
+                  fieldName="INSTANCE" language="FrenchNaturalLanguage" extensions="algo"/>
+        <lang.parserDefinition language="FrenchNaturalLanguage"
+                               implementationClass="io.github.alyrow.naturallanguage.french.NaturalParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="FrenchNaturalLanguage"
+                                       implementationClass="io.github.alyrow.naturallanguage.french.NaturalSyntaxHighlighterFactory"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

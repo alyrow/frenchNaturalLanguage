@@ -1,0 +1,31 @@
+plugins {
+    id 'org.jetbrains.intellij' version '1.2.0'
+    id 'java'
+}
+
+group 'io.github.alyrow'
+version '1.0.0'
+
+sourceSets.main.java.srcDirs 'src/main/gen'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version = '2021.2.2'
+}
+patchPluginXml {
+    changeNotes = """
+      Not the initial version but the first to be added on a custom repository.<br>
+      """
+}
+test {
+    useJUnitPlatform()
+}
