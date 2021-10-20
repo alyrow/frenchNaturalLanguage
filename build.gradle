@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'io.github.alyrow'
-version '1.0.0'
+version '1.0.1'
 
 sourceSets.main.java.srcDirs 'src/main/gen'
 
@@ -23,7 +23,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes = """
-      Not the initial version but the first to be added on a custom repository.<br>
+      Add "ABR" type
       """
 }
 test {
